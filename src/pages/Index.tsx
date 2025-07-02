@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import Dashboard from '@/components/Dashboard';
 import CourseCard from '@/components/CourseCard';
 import ChatBot from '@/components/ChatBot';
 import PricingSection from '@/components/PricingSection';
+import Footer from '@/components/Footer';
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/components/ui/use-toast";
@@ -111,8 +113,16 @@ const Index = () => {
     }
   };
 
+  // Get background class based on active tab
+  const getBackgroundClass = () => {
+    if (activeTab === 'dashboard') {
+      return "min-h-screen bg-sky-950";
+    }
+    return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-sky-50">
+    <div className={getBackgroundClass()}>
       <Header activeTab={activeTab} setActiveTab={setActiveTab} user={user} onAuthAction={handleAuthAction} />
       
       {activeTab === 'home' && (
@@ -120,56 +130,66 @@ const Index = () => {
           <Hero setActiveTab={setActiveTab} user={user} />
           <Features />
           <PricingSection />
+          <Footer />
         </>
       )}
 
       {activeTab === 'dashboard' && (
-        <Dashboard achievements={achievements} />
+        <>
+          <Dashboard achievements={achievements} />
+          <Footer />
+        </>
       )}
 
       {activeTab === 'courses' && (
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Civic Education Courses</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore our comprehensive curriculum designed to build engaged, informed citizens
-            </p>
+        <>
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-white mb-4">Civic Education Courses</h1>
+              <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+                Explore our comprehensive curriculum designed to build engaged, informed citizens
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {courses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {courses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-        </div>
+          <Footer />
+        </>
       )}
 
       {activeTab === 'achievements' && (
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Your Achievements</h1>
-            <p className="text-xl text-gray-600">Track your progress and celebrate your learning milestones</p>
+        <>
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold text-white mb-4">Your Achievements</h1>
+              <p className="text-xl text-orange-100">Track your progress and celebrate your learning milestones</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {achievements.map((achievement, index) => (
+                <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${achievement.earned ? 'bg-sky-950 border-sky-800' : 'bg-gray-100 opacity-60'}`}>
+                  <CardHeader className="text-center">
+                    <div className="text-4xl mb-2">{achievement.icon}</div>
+                    <CardTitle className={achievement.earned ? 'text-white' : 'text-gray-500'}>
+                      {achievement.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-center">
+                    <p className={achievement.earned ? 'text-sky-200' : 'text-gray-600'}>{achievement.description}</p>
+                    {achievement.earned && (
+                      <Badge className="mt-3 bg-orange-700 hover:bg-orange-800">Earned!</Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {achievements.map((achievement, index) => (
-              <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${achievement.earned ? 'bg-sky-950 border-sky-800' : 'bg-gray-100 opacity-60'}`}>
-                <CardHeader className="text-center">
-                  <div className="text-4xl mb-2">{achievement.icon}</div>
-                  <CardTitle className={achievement.earned ? 'text-white' : 'text-gray-500'}>
-                    {achievement.name}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className={achievement.earned ? 'text-sky-200' : 'text-gray-600'}>{achievement.description}</p>
-                  {achievement.earned && (
-                    <Badge className="mt-3 bg-orange-700 hover:bg-orange-800">Earned!</Badge>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
+          <Footer />
+        </>
       )}
 
       {/* AI Chat Assistant */}
