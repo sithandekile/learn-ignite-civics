@@ -31,10 +31,10 @@ const Dashboard = ({ achievements }: DashboardProps) => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-orange-700 to-orange-800 min-h-screen">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Welcome back, John!</h1>
+          <h1 className="text-4xl font-bold text-white mb-2">Welcome back, Thande!</h1>
           <p className="text-xl text-orange-100">Ready to continue your civic education journey?</p>
         </div>
 
