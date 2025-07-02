@@ -1,12 +1,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Play, ChevronRight, Users, BookOpen, Trophy } from 'lucide-react';
+import type { User } from '@supabase/supabase-js';
 
 interface HeroProps {
   setActiveTab: (tab: string) => void;
+  user: User | null;
 }
 
-const Hero = ({ setActiveTab }: HeroProps) => {
+const Hero = ({ setActiveTab, user }: HeroProps) => {
   return (
     <section className="relative py-20 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -58,16 +60,16 @@ const Hero = ({ setActiveTab }: HeroProps) => {
           </div>
 
           <div className="relative">
-            <div className="relative z-10 bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
+            <div className="relative z-10 bg-sky-950 rounded-2xl shadow-2xl p-8 border border-gray-100">
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-gray-900">Your Learning Progress</h3>
+                  <h3 className="text-xl font-semibold text-white">Your Learning Progress</h3>
                   <div className="text-2xl">📊</div>
                 </div>
                 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Constitutional Law</span>
+                    <span className="text-gray-300">Constitutional Law</span>
                     <span className="text-orange-700 font-semibold">85%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -77,7 +79,7 @@ const Hero = ({ setActiveTab }: HeroProps) => {
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Voting Rights</span>
+                    <span className="text-gray-300">Voting Rights</span>
                     <span className="text-orange-700 font-semibold">62%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -87,7 +89,7 @@ const Hero = ({ setActiveTab }: HeroProps) => {
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Local Government</span>
+                    <span className="text-gray-300">Local Government</span>
                     <span className="text-orange-700 font-semibold">40%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
@@ -95,9 +97,9 @@ const Hero = ({ setActiveTab }: HeroProps) => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-100">
+                <div className="pt-4 border-t border-gray-700">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-900 font-semibold">Total Points</span>
+                    <span className="text-white font-semibold">Total Points</span>
                     <span className="text-2xl font-bold text-orange-700">1,250</span>
                   </div>
                 </div>
