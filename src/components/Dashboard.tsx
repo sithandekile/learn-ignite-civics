@@ -31,122 +31,124 @@ const Dashboard = ({ achievements }: DashboardProps) => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Welcome back, John!</h1>
-        <p className="text-xl text-sky-200">Ready to continue your civic education journey?</p>
-      </div>
+    <div className="bg-gradient-to-br from-orange-700 to-orange-800 min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">Welcome back, John!</h1>
+          <p className="text-xl text-orange-100">Ready to continue your civic education journey?</p>
+        </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-sky-900 border-sky-700">
-              <CardHeader className="pb-2">
-                <Icon className={`h-8 w-8 mx-auto ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-sky-200">{stat.label}</div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+                <CardHeader className="pb-2">
+                  <Icon className={`h-8 w-8 mx-auto ${stat.color}`} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-sm text-orange-100">{stat.label}</div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Learning Progress */}
-        <Card className="hover:shadow-lg transition-shadow duration-300 bg-sky-900 border-sky-700">
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Learning Progress */}
+          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <TrendingUp className="h-5 w-5 text-orange-300" />
+                <span>Learning Progress</span>
+              </CardTitle>
+              <CardDescription className="text-orange-100">Track your progress across all courses</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-white">Constitutional Foundations</span>
+                  <span className="text-orange-300 font-semibold">85%</span>
+                </div>
+                <Progress value={85} className="h-3" />
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-white">Voting Rights & Democracy</span>
+                  <span className="text-orange-300 font-semibold">62%</span>
+                </div>
+                <Progress value={62} className="h-3" />
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-white">Civil Rights Movement</span>
+                  <span className="text-orange-300 font-semibold">40%</span>
+                </div>
+                <Progress value={40} className="h-3" />
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-medium text-white">Local Government</span>
+                  <span className="text-orange-300 font-semibold">95%</span>
+                </div>
+                <Progress value={95} className="h-3" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Achievements */}
+          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2 text-white">
+                <Award className="h-5 w-5 text-orange-300" />
+                <span>Recent Achievements</span>
+              </CardTitle>
+              <CardDescription className="text-orange-100">Your latest accomplishments</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {achievements.filter(a => a.earned).map((achievement, index) => (
+                <div key={index} className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg border border-white/20">
+                  <div className="text-2xl">{achievement.icon}</div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-white">{achievement.name}</div>
+                    <div className="text-sm text-orange-100">{achievement.description}</div>
+                  </div>
+                  <Badge className="bg-orange-600 hover:bg-orange-700 text-white">New!</Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Activity */}
+        <Card className="mt-8 hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2 text-white">
-              <TrendingUp className="h-5 w-5 text-orange-700" />
-              <span>Learning Progress</span>
+              <Clock className="h-5 w-5 text-orange-300" />
+              <span>Recent Activity</span>
             </CardTitle>
-            <CardDescription className="text-sky-200">Track your progress across all courses</CardDescription>
+            <CardDescription className="text-orange-100">Your learning activity over the past week</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-white">Constitutional Foundations</span>
-                <span className="text-orange-700 font-semibold">85%</span>
-              </div>
-              <Progress value={85} className="h-3" />
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-white">Voting Rights & Democracy</span>
-                <span className="text-orange-700 font-semibold">62%</span>
-              </div>
-              <Progress value={62} className="h-3" />
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-white">Civil Rights Movement</span>
-                <span className="text-orange-700 font-semibold">40%</span>
-              </div>
-              <Progress value={40} className="h-3" />
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="font-medium text-white">Local Government</span>
-                <span className="text-orange-700 font-semibold">95%</span>
-              </div>
-              <Progress value={95} className="h-3" />
+          <CardContent>
+            <div className="space-y-4">
+              {recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors duration-200">
+                  <div>
+                    <div className="font-semibold text-white">{activity.course}</div>
+                    <div className="text-sm text-orange-100">{activity.action}</div>
+                  </div>
+                  <div className="text-sm text-orange-200">{activity.time}</div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
-
-        {/* Recent Achievements */}
-        <Card className="hover:shadow-lg transition-shadow duration-300 bg-sky-900 border-sky-700">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-white">
-              <Award className="h-5 w-5 text-orange-700" />
-              <span>Recent Achievements</span>
-            </CardTitle>
-            <CardDescription className="text-sky-200">Your latest accomplishments</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {achievements.filter(a => a.earned).map((achievement, index) => (
-              <div key={index} className="flex items-center space-x-3 p-3 bg-orange-900/20 rounded-lg border border-orange-700/30">
-                <div className="text-2xl">{achievement.icon}</div>
-                <div className="flex-1">
-                  <div className="font-semibold text-white">{achievement.name}</div>
-                  <div className="text-sm text-sky-200">{achievement.description}</div>
-                </div>
-                <Badge className="bg-orange-700 hover:bg-orange-800">New!</Badge>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
       </div>
-
-      {/* Recent Activity */}
-      <Card className="mt-8 hover:shadow-lg transition-shadow duration-300 bg-sky-900 border-sky-700">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-white">
-            <Clock className="h-5 w-5 text-orange-700" />
-            <span>Recent Activity</span>
-          </CardTitle>
-          <CardDescription className="text-sky-200">Your learning activity over the past week</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-sky-800/50 rounded-lg hover:bg-sky-800 transition-colors duration-200">
-                <div>
-                  <div className="font-semibold text-white">{activity.course}</div>
-                  <div className="text-sm text-sky-200">{activity.action}</div>
-                </div>
-                <div className="text-sm text-sky-300">{activity.time}</div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

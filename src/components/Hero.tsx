@@ -16,9 +16,9 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Master <span className="text-orange-700">Civic Education</span> with AI-Powered Learning
+                Master <span className="text-white">Civic Education</span> with AI-Powered Learning
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-white leading-relaxed">
                 Discover personalized, gamified civic education that adapts to your learning style. 
                 Build the knowledge and skills to become an engaged, informed citizen.
               </p>
@@ -27,7 +27,7 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
                 size="lg" 
-                className="bg-orange-700 hover:bg-orange-800 text-white px-8 py-3 text-lg"
+                className="bg-sky-800 hover:bg-sky-900 text-white px-8 py-3 text-lg"
                 onClick={() => setActiveTab('courses')}
               >
                 Start Learning

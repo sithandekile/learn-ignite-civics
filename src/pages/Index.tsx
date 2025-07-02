@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -115,9 +114,6 @@ const Index = () => {
 
   // Get background class based on active tab
   const getBackgroundClass = () => {
-    if (activeTab === 'dashboard') {
-      return "min-h-screen bg-sky-950";
-    }
     return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
   };
 
