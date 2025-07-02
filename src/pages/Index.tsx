@@ -1,20 +1,27 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Trophy, Users, Brain, Star, Award, Target, MessageCircle, Play, ChevronRight } from 'lucide-react';
+import { BookOpen, Trophy, Users, Brain, Star, Award, Target, MessageCircle, Play, ChevronRight, LogOut } from 'lucide-react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import Dashboard from '@/components/Dashboard';
 import CourseCard from '@/components/CourseCard';
 import ChatBot from '@/components/ChatBot';
+import PricingSection from '@/components/PricingSection';
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from 'react-router-dom';
+import { useToast } from "@/components/ui/use-toast";
+import type { User } from '@supabase/supabase-js';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showChat, setShowChat] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const courses = [
     {
@@ -66,14 +73,53 @@ const Index = () => {
     { name: "Civic Leader", description: "Reach 1000 points", earned: false, icon: "⭐" }
   ];
 
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "Come back soon!",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAuthAction = () => {
+    if (user) {
+      handleSignOut();
+    } else {
+      navigate('/auth');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-sky-50">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} user={user} onAuthAction={handleAuthAction} />
       
       {activeTab === 'home' && (
         <>
-          <Hero setActiveTab={setActiveTab} />
+          <Hero setActiveTab={setActiveTab} user={user} />
           <Features />
+          <PricingSection />
         </>
       )}
 
@@ -107,15 +153,15 @@ const Index = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {achievements.map((achievement, index) => (
-              <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${achievement.earned ? 'bg-gradient-to-br from-orange-100 to-orange-50 border-orange-200' : 'bg-gray-50 opacity-60'}`}>
+              <Card key={index} className={`transition-all duration-300 hover:shadow-lg ${achievement.earned ? 'bg-sky-950 border-sky-800' : 'bg-gray-100 opacity-60'}`}>
                 <CardHeader className="text-center">
                   <div className="text-4xl mb-2">{achievement.icon}</div>
-                  <CardTitle className={achievement.earned ? 'text-orange-700' : 'text-gray-500'}>
+                  <CardTitle className={achievement.earned ? 'text-white' : 'text-gray-500'}>
                     {achievement.name}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-gray-600">{achievement.description}</p>
+                  <p className={achievement.earned ? 'text-sky-200' : 'text-gray-600'}>{achievement.description}</p>
                   {achievement.earned && (
                     <Badge className="mt-3 bg-orange-700 hover:bg-orange-800">Earned!</Badge>
                   )}

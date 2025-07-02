@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock, Trophy, Play } from 'lucide-react';
+import { BookOpen, Trophy, Play } from 'lucide-react';
 
 interface Course {
   id: number;
@@ -35,7 +35,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
   };
 
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg overflow-hidden">
+    <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-sky-950 border-sky-800 text-white overflow-hidden">
       <div className="relative">
         <div className="h-32 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
           <span className="text-4xl">{course.image}</span>
@@ -49,10 +49,10 @@ const CourseCard = ({ course }: CourseCardProps) => {
       </div>
       
       <CardHeader className="pb-3">
-        <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-orange-700 transition-colors duration-300">
+        <CardTitle className="text-xl font-bold text-white group-hover:text-orange-400 transition-colors duration-300">
           {course.title}
         </CardTitle>
-        <CardDescription className="text-gray-600 leading-relaxed">
+        <CardDescription className="text-sky-200 leading-relaxed">
           {course.description}
         </CardDescription>
       </CardHeader>
@@ -60,20 +60,20 @@ const CourseCard = ({ course }: CourseCardProps) => {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Progress</span>
-            <span className="font-semibold text-orange-700">{course.progress}%</span>
+            <span className="text-sky-300">Progress</span>
+            <span className="font-semibold text-orange-400">{course.progress}%</span>
           </div>
           <Progress value={course.progress} className="h-2" />
         </div>
         
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex items-center justify-between text-sm text-sky-300">
           <div className="flex items-center space-x-1">
             <BookOpen className="h-4 w-4" />
             <span>{course.lessons} lessons</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Trophy className="h-4 w-4 text-orange-700" />
-            <span className="text-orange-700 font-semibold">{course.points} pts</span>
+            <Trophy className="h-4 w-4 text-orange-400" />
+            <span className="text-orange-400 font-semibold">{course.points} pts</span>
           </div>
         </div>
         

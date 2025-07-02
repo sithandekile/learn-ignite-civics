@@ -1,14 +1,17 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Trophy, BarChart3, Award } from 'lucide-react';
+import { BookOpen, Trophy, BarChart3, Award, LogOut, LogIn } from 'lucide-react';
+import type { User } from '@supabase/supabase-js';
 
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  user: User | null;
+  onAuthAction: () => void;
 }
 
-const Header = ({ activeTab, setActiveTab }: HeaderProps) => {
+const Header = ({ activeTab, setActiveTab, user, onAuthAction }: HeaderProps) => {
   const navItems = [
     { id: 'home', label: 'Home', icon: BookOpen },
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -52,13 +55,31 @@ const Header = ({ activeTab, setActiveTab }: HeaderProps) => {
           </nav>
 
           <div className="flex items-center space-x-3">
-            <Badge variant="outline" className="hidden sm:flex items-center space-x-1 border-orange-200 text-orange-700">
-              <Trophy className="h-3 w-3" />
-              <span>1,250 pts</span>
-            </Badge>
-            <div className="w-8 h-8 bg-gradient-secondary rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold text-sm">JD</span>
-            </div>
+            {user && (
+              <Badge variant="outline" className="hidden sm:flex items-center space-x-1 border-orange-200 text-orange-700">
+                <Trophy className="h-3 w-3" />
+                <span>1,250 pts</span>
+              </Badge>
+            )}
+            
+            <Button
+              onClick={onAuthAction}
+              variant="outline"
+              className="flex items-center space-x-2 border-orange-200 text-orange-700 hover:bg-orange-50"
+            >
+              {user ? <LogOut className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
+              <span className="hidden sm:inline">
+                {user ? 'Sign Out' : 'Sign In'}
+              </span>
+            </Button>
+            
+            {user && (
+              <div className="w-8 h-8 bg-gradient-secondary rounded-full flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">
+                  {user.email?.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
