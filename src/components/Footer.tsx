@@ -20,9 +20,6 @@ const Footer = () => {
                 <p className="text-sm text-sky-300">Learn. Engage. Lead.</p>
               </div>
             </div>
-            <p className="text-sky-300 text-sm">
-              Empowering citizens through AI-powered civic education and engagement.
-            </p>
           </div>
 
           {/* Quick Links */}
