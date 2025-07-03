@@ -65,15 +65,15 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
             </div>
 
             <div className="flex items-center space-x-8 pt-8">
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-white">
                 <Users className="h-5 w-5 text-sky-950" />
                 <span>10,000+ Learners</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-white">
                 <BookOpen className="h-5 w-5 text-sky-950" />
                 <span>50+ Courses</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-white">
                 <Trophy className="h-5 w-5 text-sky-950" />
                 <span>Gamified Learning</span>
               </div>
@@ -161,7 +161,7 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
             </div>
             
             {/* Floating elements */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-orange-700 rounded-full flex items-center justify-center text-white text-2xl animate-bounce">
+            <div className="absolute -top-4 -right-4 w-16 h-16 bg-sky-950 rounded-full flex items-center justify-center text-white text-2xl animate-bounce">
               🏆
             </div>
             <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-sky-950 rounded-full flex items-center justify-center text-white text-xl">
