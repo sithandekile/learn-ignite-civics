@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Trophy, Play } from 'lucide-react';
+import { BookOpen, Trophy, Play, Lock } from 'lucide-react';
 
 interface Course {
   id: number;
@@ -14,13 +14,16 @@ interface Course {
   difficulty: string;
   image: string;
   points: number;
+  requiresPremium?: boolean;
 }
 
 interface CourseCardProps {
   course: Course;
+  userSubscriptionTier?: string | null;
+  onAccessRestricted?: () => void;
 }
 
-const CourseCard = ({ course }: CourseCardProps) => {
+const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: CourseCardProps) => {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Beginner':
@@ -34,11 +37,35 @@ const CourseCard = ({ course }: CourseCardProps) => {
     }
   };
 
+  const hasAccess = () => {
+    if (course.difficulty === 'Beginner') return true;
+    if (!userSubscriptionTier) return false;
+    if (course.difficulty === 'Intermediate' && (userSubscriptionTier === 'Premium' || userSubscriptionTier === 'Enterprise')) return true;
+    if (course.difficulty === 'Advanced' && userSubscriptionTier === 'Enterprise') return true;
+    return false;
+  };
+
+  const isAccessible = hasAccess();
+
+  const handleContinueClick = () => {
+    if (!isAccessible) {
+      onAccessRestricted?.();
+      return;
+    }
+    // Navigate to lessons - this would typically use react-router
+    console.log(`Navigating to lessons for course ${course.id}`);
+  };
+
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-sky-950 border-sky-800 text-white overflow-hidden">
+    <Card className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-sky-950 border-sky-800 text-white overflow-hidden ${!isAccessible ? 'opacity-60' : ''}`}>
       <div className="relative">
         <div className="h-32 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
           <span className="text-4xl">{course.image}</span>
+          {!isAccessible && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <Lock className="h-8 w-8 text-white" />
+            </div>
+          )}
         </div>
         <Badge 
           variant="outline" 
@@ -46,6 +73,11 @@ const CourseCard = ({ course }: CourseCardProps) => {
         >
           {course.difficulty}
         </Badge>
+        {!isAccessible && (
+          <Badge className="absolute top-3 left-3 bg-red-600 text-white">
+            Premium Required
+          </Badge>
+        )}
       </div>
       
       <CardHeader className="pb-3">
@@ -61,9 +93,9 @@ const CourseCard = ({ course }: CourseCardProps) => {
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm">
             <span className="text-sky-300">Progress</span>
-            <span className="font-semibold text-orange-400">{course.progress}%</span>
+            <span className="font-semibold text-orange-400">{isAccessible ? course.progress : 0}%</span>
           </div>
-          <Progress value={course.progress} className="h-2" />
+          <Progress value={isAccessible ? course.progress : 0} className="h-2" />
         </div>
         
         <div className="flex items-center justify-between text-sm text-sky-300">
@@ -78,11 +110,21 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
         
         <Button 
-          className="w-full bg-orange-700 hover:bg-orange-800 text-white group-hover:shadow-lg transition-all duration-300"
+          onClick={handleContinueClick}
+          className={`w-full ${isAccessible ? 'bg-orange-700 hover:bg-orange-800' : 'bg-gray-600 hover:bg-gray-700'} text-white group-hover:shadow-lg transition-all duration-300`}
           size="lg"
         >
-          <Play className="mr-2 h-4 w-4" />
-          {course.progress > 0 ? 'Continue Learning' : 'Start Course'}
+          {!isAccessible ? (
+            <>
+              <Lock className="mr-2 h-4 w-4" />
+              Upgrade to Access
+            </>
+          ) : (
+            <>
+              <Play className="mr-2 h-4 w-4" />
+              {course.progress > 0 ? 'Continue Learning' : 'Start Course'}
+            </>
+          )}
         </Button>
       </CardContent>
     </Card>

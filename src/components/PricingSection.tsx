@@ -13,15 +13,14 @@ const PricingSection = () => {
 
   const plans = [
     {
-      id: 'basic',
-      name: 'Basic',
-      price: '$9.99',
+      id: 'freemium',
+      name: 'Freemium',
+      price: '$0',
       period: '/month',
-      description: 'Perfect for individual learners',
+      description: 'Perfect for getting started',
       features: [
-        'Access to basic courses',
-        'Progress tracking',
-        'Basic gamification',
+        'Access to beginner courses',
+        'Basic progress tracking',
         'Community forum access',
         'Mobile app access'
       ],
@@ -34,7 +33,8 @@ const PricingSection = () => {
       period: '/month',
       description: 'Best for serious civic engagement',
       features: [
-        'All Basic features',
+        'All Freemium features',
+        'Access to intermediate courses',
         'Advanced AI tutoring',
         'Personalized learning paths',
         'Premium course content',
@@ -52,6 +52,8 @@ const PricingSection = () => {
       description: 'For schools and organizations',
       features: [
         'All Premium features',
+        'Access to advanced courses',
+        'Enhanced AI tutoring',
         'Custom branding',
         'Analytics dashboard',
         'Bulk user management',
@@ -64,6 +66,14 @@ const PricingSection = () => {
   ];
 
   const handleSubscribe = async (planId: string) => {
+    if (planId === 'freemium') {
+      toast({
+        title: "Free Plan Active",
+        description: "You're already on the free plan! Sign up to get started.",
+      });
+      return;
+    }
+
     setLoading(planId);
     
     try {
@@ -151,7 +161,7 @@ const PricingSection = () => {
                       : 'bg-sky-800 hover:bg-sky-700'
                   }`}
                 >
-                  {loading === plan.id ? 'Processing...' : 'Get Started'}
+                  {loading === plan.id ? 'Processing...' : (plan.id === 'freemium' ? 'Get Started Free' : 'Get Started')}
                 </Button>
               </CardContent>
             </Card>

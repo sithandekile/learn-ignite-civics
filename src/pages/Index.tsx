@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +22,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [showChat, setShowChat] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [userSubscriptionTier, setUserSubscriptionTier] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -29,7 +31,7 @@ const Index = () => {
       id: 1,
       title: "Constitutional Foundations",
       description: "Explore the fundamental principles of constitutional democracy",
-      progress: 75,
+      progress: 0, // Start from zero
       lessons: 12,
       difficulty: "Beginner",
       image: "🏛️",
@@ -39,7 +41,7 @@ const Index = () => {
       id: 2,
       title: "Voting Rights & Democracy",
       description: "Understanding electoral systems and democratic participation",
-      progress: 45,
+      progress: 0, // Start from zero
       lessons: 8,
       difficulty: "Intermediate",
       image: "🗳️",
@@ -49,7 +51,7 @@ const Index = () => {
       id: 3,
       title: "Civil Rights Movement",
       description: "The struggle for equality and social justice in America",
-      progress: 20,
+      progress: 0, // Start from zero
       lessons: 15,
       difficulty: "Advanced",
       image: "✊",
@@ -59,7 +61,7 @@ const Index = () => {
       id: 4,
       title: "Local Government",
       description: "How city and county governments impact daily life",
-      progress: 90,
+      progress: 0, // Start from zero
       lessons: 6,
       difficulty: "Beginner",
       image: "🏛️",
@@ -78,11 +80,21 @@ const Index = () => {
     // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        // In a real app, you'd fetch subscription status from your backend
+        // For now, we'll simulate a freemium user
+        setUserSubscriptionTier('Freemium');
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        setUserSubscriptionTier('Freemium');
+      } else {
+        setUserSubscriptionTier(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -91,6 +103,7 @@ const Index = () => {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
+      setUserSubscriptionTier(null);
       toast({
         title: "Signed out successfully",
         description: "Come back soon!",
@@ -112,8 +125,33 @@ const Index = () => {
     }
   };
 
+  const handleAccessRestricted = () => {
+    toast({
+      title: "Premium Required",
+      description: "Please upgrade to access intermediate and advanced courses.",
+      variant: "destructive"
+    });
+    // Scroll to pricing section
+    setActiveTab('home');
+    setTimeout(() => {
+      const pricingSection = document.querySelector('#pricing');
+      pricingSection?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleUpgradeClick = () => {
+    setActiveTab('home');
+    setTimeout(() => {
+      const pricingSection = document.querySelector('#pricing');
+      pricingSection?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
   // Get background class based on active tab
   const getBackgroundClass = () => {
+    if (activeTab === 'dashboard') {
+      return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
+    }
     return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
   };
 
@@ -125,7 +163,9 @@ const Index = () => {
         <>
           <Hero setActiveTab={setActiveTab} user={user} />
           <Features />
-          <PricingSection />
+          <div id="pricing">
+            <PricingSection />
+          </div>
           <Footer />
         </>
       )}
@@ -149,7 +189,12 @@ const Index = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard 
+                  key={course.id} 
+                  course={course} 
+                  userSubscriptionTier={userSubscriptionTier}
+                  onAccessRestricted={handleAccessRestricted}
+                />
               ))}
             </div>
           </div>
@@ -188,8 +233,13 @@ const Index = () => {
         </>
       )}
 
-      {/* AI Chat Assistant */}
-      <ChatBot isOpen={showChat} onToggle={() => setShowChat(!showChat)} />
+      {/* AI Chat Assistant - Only show for premium users */}
+      <ChatBot 
+        isOpen={showChat} 
+        onToggle={() => setShowChat(!showChat)} 
+        userSubscriptionTier={userSubscriptionTier}
+        onUpgradeClick={handleUpgradeClick}
+      />
       
       {/* Floating Chat Button */}
       <Button

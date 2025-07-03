@@ -4,11 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { X, Send, Bot, User } from 'lucide-react';
+import { X, Send, Bot, User, Lock } from 'lucide-react';
 
 interface ChatBotProps {
   isOpen: boolean;
   onToggle: () => void;
+  userSubscriptionTier?: string | null;
+  onUpgradeClick?: () => void;
 }
 
 interface Message {
@@ -18,7 +20,7 @@ interface Message {
   timestamp: Date;
 }
 
-const ChatBot = ({ isOpen, onToggle }: ChatBotProps) => {
+const ChatBot = ({ isOpen, onToggle, userSubscriptionTier, onUpgradeClick }: ChatBotProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -29,8 +31,10 @@ const ChatBot = ({ isOpen, onToggle }: ChatBotProps) => {
   ]);
   const [inputValue, setInputValue] = useState('');
 
+  const hasAIAccess = userSubscriptionTier === 'Premium' || userSubscriptionTier === 'Enterprise';
+
   const handleSend = () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || !hasAIAccess) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -80,7 +84,7 @@ const ChatBot = ({ isOpen, onToggle }: ChatBotProps) => {
             </div>
             <div className="flex items-center space-x-2">
               <Badge variant="secondary" className="bg-white/20 text-white border-0">
-                Online
+                {hasAIAccess ? 'Online' : 'Premium Only'}
               </Badge>
               <Button 
                 variant="ghost" 
@@ -95,47 +99,65 @@ const ChatBot = ({ isOpen, onToggle }: ChatBotProps) => {
         </CardHeader>
         
         <CardContent className="flex flex-col h-full p-0">
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
-                <div className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? 'flex-row' : 'flex-row-reverse space-x-reverse'}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    message.isBot 
-                      ? 'bg-orange-100 text-orange-700' 
-                      : 'bg-sky-100 text-sky-700'
-                  }`}>
-                    {message.isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                  </div>
-                  <div className={`p-3 rounded-lg ${
-                    message.isBot 
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'bg-orange-700 text-white'
-                  }`}>
-                    <p className="text-sm">{message.text}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="border-t border-gray-200 p-4">
-            <div className="flex space-x-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask me anything about civic education..."
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                className="flex-1"
-              />
+          {!hasAIAccess ? (
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+              <Lock className="h-16 w-16 text-gray-400 mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Tutor Premium Feature</h3>
+              <p className="text-gray-600 mb-4">
+                Upgrade to Premium or Enterprise to access our AI tutor for personalized learning assistance.
+              </p>
               <Button 
-                onClick={handleSend}
-                className="bg-orange-700 hover:bg-orange-800"
-                size="icon"
+                onClick={onUpgradeClick}
+                className="bg-orange-700 hover:bg-orange-800 text-white"
               >
-                <Send className="h-4 w-4" />
+                Upgrade Now
               </Button>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((message) => (
+                  <div key={message.id} className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}>
+                    <div className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? 'flex-row' : 'flex-row-reverse space-x-reverse'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        message.isBot 
+                          ? 'bg-orange-100 text-orange-700' 
+                          : 'bg-sky-100 text-sky-700'
+                      }`}>
+                        {message.isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                      </div>
+                      <div className={`p-3 rounded-lg ${
+                        message.isBot 
+                          ? 'bg-gray-100 text-gray-900'
+                          : 'bg-orange-700 text-white'
+                      }`}>
+                        <p className="text-sm">{message.text}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="border-t border-gray-200 p-4">
+                <div className="flex space-x-2">
+                  <Input
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Ask me anything about civic education..."
+                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={handleSend}
+                    className="bg-orange-700 hover:bg-orange-800"
+                    size="icon"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
