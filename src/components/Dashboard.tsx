@@ -72,7 +72,7 @@ const Dashboard = ({ achievements, user }: DashboardProps) => {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-sky-950 border-gray-200">
                 <CardHeader className="pb-2">
                   <Icon className={`h-8 w-8 mx-auto ${stat.color}`} />
                 </CardHeader>
