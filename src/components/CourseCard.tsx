@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen, Trophy, Play, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Course {
   id: number;
@@ -24,6 +25,8 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: CourseCardProps) => {
+  const navigate = useNavigate();
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Beginner':
@@ -52,8 +55,8 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: Course
       onAccessRestricted?.();
       return;
     }
-    // Navigate to lessons - this would typically use react-router
-    console.log(`Navigating to lessons for course ${course.id}`);
+    // Navigate to lessons page
+    navigate(`/lessons/${course.id}`);
   };
 
   return (

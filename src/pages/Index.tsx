@@ -14,7 +14,7 @@ import ChatBot from '@/components/ChatBot';
 import PricingSection from '@/components/PricingSection';
 import Footer from '@/components/Footer';
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useToast } from "@/components/ui/use-toast";
 import type { User } from '@supabase/supabase-js';
 
@@ -24,6 +24,7 @@ const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userSubscriptionTier, setUserSubscriptionTier] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const courses = [
@@ -77,6 +78,11 @@ const Index = () => {
   ];
 
   useEffect(() => {
+    // Check if there's a state indicating which tab to show
+    if (location.state && location.state.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+
     // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -98,7 +104,7 @@ const Index = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [location.state]);
 
   const handleSignOut = async () => {
     try {
@@ -150,7 +156,10 @@ const Index = () => {
   // Get background class based on active tab
   const getBackgroundClass = () => {
     if (activeTab === 'dashboard') {
-      return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
+      return "min-h-screen bg-wheat";
+    }
+    if (activeTab === 'courses') {
+      return "min-h-screen bg-wheat";
     }
     return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
   };
@@ -181,8 +190,8 @@ const Index = () => {
         <>
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-white mb-4">Civic Education Courses</h1>
-              <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Civic Education Courses</h1>
+              <p className="text-xl text-gray-700 max-w-3xl mx-auto">
                 Explore our comprehensive curriculum designed to build engaged, informed citizens
               </p>
             </div>

@@ -19,8 +19,8 @@ const Dashboard = ({ achievements }: DashboardProps) => {
   const stats = [
     { label: "Courses Completed", value: "3", icon: BookOpen, color: "text-orange-700" },
     { label: "Total Points", value: "1,250", icon: Trophy, color: "text-orange-700" },
-    { label: "Learning Streak", value: "12 days", icon: Target, color: "text-sky-400" },
-    { label: "Study Time", value: "24h", icon: Clock, color: "text-sky-400" }
+    { label: "Learning Streak", value: "12 days", icon: Target, color: "text-sky-700" },
+    { label: "Study Time", value: "24h", icon: Clock, color: "text-sky-700" }
   ];
 
   const recentActivity = [
@@ -34,8 +34,8 @@ const Dashboard = ({ achievements }: DashboardProps) => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Welcome back, Thande!</h1>
-          <p className="text-xl text-orange-100">Ready to continue your civic education journey?</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome back, Thande!</h1>
+          <p className="text-xl text-gray-700">Ready to continue your civic education journey?</p>
         </div>
 
         {/* Stats Grid */}
@@ -43,13 +43,13 @@ const Dashboard = ({ achievements }: DashboardProps) => {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
                 <CardHeader className="pb-2">
                   <Icon className={`h-8 w-8 mx-auto ${stat.color}`} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-orange-100">{stat.label}</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
                 </CardContent>
               </Card>
             );
@@ -58,43 +58,43 @@ const Dashboard = ({ achievements }: DashboardProps) => {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Learning Progress */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-white">
-                <TrendingUp className="h-5 w-5 text-orange-300" />
+              <CardTitle className="flex items-center space-x-2 text-gray-900">
+                <TrendingUp className="h-5 w-5 text-orange-700" />
                 <span>Learning Progress</span>
               </CardTitle>
-              <CardDescription className="text-orange-100">Track your progress across all courses</CardDescription>
+              <CardDescription className="text-gray-600">Track your progress across all courses</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-white">Constitutional Foundations</span>
-                  <span className="text-orange-300 font-semibold">85%</span>
+                  <span className="font-medium text-gray-900">Constitutional Foundations</span>
+                  <span className="text-orange-700 font-semibold">85%</span>
                 </div>
                 <Progress value={85} className="h-3" />
               </div>
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-white">Voting Rights & Democracy</span>
-                  <span className="text-orange-300 font-semibold">62%</span>
+                  <span className="font-medium text-gray-900">Voting Rights & Democracy</span>
+                  <span className="text-orange-700 font-semibold">62%</span>
                 </div>
                 <Progress value={62} className="h-3" />
               </div>
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-white">Civil Rights Movement</span>
-                  <span className="text-orange-300 font-semibold">40%</span>
+                  <span className="font-medium text-gray-900">Civil Rights Movement</span>
+                  <span className="text-orange-700 font-semibold">40%</span>
                 </div>
                 <Progress value={40} className="h-3" />
               </div>
               
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-white">Local Government</span>
-                  <span className="text-orange-300 font-semibold">95%</span>
+                  <span className="font-medium text-gray-900">Local Government</span>
+                  <span className="text-orange-700 font-semibold">95%</span>
                 </div>
                 <Progress value={95} className="h-3" />
               </div>
@@ -102,23 +102,23 @@ const Dashboard = ({ achievements }: DashboardProps) => {
           </Card>
 
           {/* Recent Achievements */}
-          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+          <Card className="hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-white">
-                <Award className="h-5 w-5 text-orange-300" />
+              <CardTitle className="flex items-center space-x-2 text-gray-900">
+                <Award className="h-5 w-5 text-orange-700" />
                 <span>Recent Achievements</span>
               </CardTitle>
-              <CardDescription className="text-orange-100">Your latest accomplishments</CardDescription>
+              <CardDescription className="text-gray-600">Your latest accomplishments</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {achievements.filter(a => a.earned).map((achievement, index) => (
-                <div key={index} className="flex items-center space-x-3 p-3 bg-white/10 rounded-lg border border-white/20">
+                <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="text-2xl">{achievement.icon}</div>
                   <div className="flex-1">
-                    <div className="font-semibold text-white">{achievement.name}</div>
-                    <div className="text-sm text-orange-100">{achievement.description}</div>
+                    <div className="font-semibold text-gray-900">{achievement.name}</div>
+                    <div className="text-sm text-gray-600">{achievement.description}</div>
                   </div>
-                  <Badge className="bg-orange-600 hover:bg-orange-700 text-white">New!</Badge>
+                  <Badge className="bg-orange-700 hover:bg-orange-800 text-white">New!</Badge>
                 </div>
               ))}
             </CardContent>
@@ -126,23 +126,23 @@ const Dashboard = ({ achievements }: DashboardProps) => {
         </div>
 
         {/* Recent Activity */}
-        <Card className="mt-8 hover:shadow-lg transition-shadow duration-300 bg-white/10 border-white/20 backdrop-blur-sm">
+        <Card className="mt-8 hover:shadow-lg transition-shadow duration-300 bg-white border-gray-200">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-white">
-              <Clock className="h-5 w-5 text-orange-300" />
+            <CardTitle className="flex items-center space-x-2 text-gray-900">
+              <Clock className="h-5 w-5 text-orange-700" />
               <span>Recent Activity</span>
             </CardTitle>
-            <CardDescription className="text-orange-100">Your learning activity over the past week</CardDescription>
+            <CardDescription className="text-gray-600">Your learning activity over the past week</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors duration-200">
+                <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                   <div>
-                    <div className="font-semibold text-white">{activity.course}</div>
-                    <div className="text-sm text-orange-100">{activity.action}</div>
+                    <div className="font-semibold text-gray-900">{activity.course}</div>
+                    <div className="text-sm text-gray-600">{activity.action}</div>
                   </div>
-                  <div className="text-sm text-orange-200">{activity.time}</div>
+                  <div className="text-sm text-gray-500">{activity.time}</div>
                 </div>
               ))}
             </div>
