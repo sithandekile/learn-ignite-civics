@@ -5,6 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen, Trophy, Play, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useUserProgress } from '@/hooks/useUserProgress';
+import { useEffect } from 'react';
+import type { User } from '@supabase/supabase-js';
 
 interface Course {
   id: number;
@@ -22,10 +25,18 @@ interface CourseCardProps {
   course: Course;
   userSubscriptionTier?: string | null;
   onAccessRestricted?: () => void;
+  user?: User | null;
 }
 
-const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: CourseCardProps) => {
+const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted, user }: CourseCardProps) => {
   const navigate = useNavigate();
+  const { courseProgresses, fetchCourseProgress, initializeCourseProgress } = useUserProgress(user);
+
+  useEffect(() => {
+    if (user) {
+      fetchCourseProgress(course.id);
+    }
+  }, [user, course.id]);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -49,12 +60,21 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: Course
   };
 
   const isAccessible = hasAccess();
+  const courseProgress = courseProgresses[course.id];
+  const actualProgress = courseProgress?.progressPercentage || 0;
+  const actualScore = courseProgress?.courseScore || 0;
 
-  const handleContinueClick = () => {
+  const handleContinueClick = async () => {
     if (!isAccessible) {
       onAccessRestricted?.();
       return;
     }
+
+    // Initialize course progress if it doesn't exist
+    if (user && !courseProgress) {
+      await initializeCourseProgress(course.id, course.lessons);
+    }
+
     // Navigate to lessons page
     navigate(`/lessons/${course.id}`);
   };
@@ -96,9 +116,9 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: Course
         <div className="space-y-2">
           <div className="flex justify-between items-center text-sm">
             <span className="text-sky-300">Progress</span>
-            <span className="font-semibold text-orange-400">{isAccessible ? course.progress : 0}%</span>
+            <span className="font-semibold text-orange-400">{isAccessible ? actualProgress : 0}%</span>
           </div>
-          <Progress value={isAccessible ? course.progress : 0} className="h-2" />
+          <Progress value={isAccessible ? actualProgress : 0} className="h-2" />
         </div>
         
         <div className="flex items-center justify-between text-sm text-sky-300">
@@ -108,7 +128,9 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: Course
           </div>
           <div className="flex items-center space-x-1">
             <Trophy className="h-4 w-4 text-orange-400" />
-            <span className="text-orange-400 font-semibold">{course.points} pts</span>
+            <span className="text-orange-400 font-semibold">
+              {isAccessible && user ? actualScore : course.points} pts
+            </span>
           </div>
         </div>
         
@@ -125,7 +147,7 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted }: Course
           ) : (
             <>
               <Play className="mr-2 h-4 w-4" />
-              {course.progress > 0 ? 'Continue Learning' : 'Start Course'}
+              {actualProgress > 0 ? 'Continue Learning' : 'Start Course'}
             </>
           )}
         </Button>

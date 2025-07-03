@@ -45,12 +45,94 @@ export type Database = {
         }
         Relationships: []
       }
+      user_course_progress: {
+        Row: {
+          course_completed: boolean | null
+          course_id: number
+          course_score: number | null
+          created_at: string
+          id: string
+          lessons_completed: number | null
+          total_lessons: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_completed?: boolean | null
+          course_id: number
+          course_score?: number | null
+          created_at?: string
+          id?: string
+          lessons_completed?: number | null
+          total_lessons: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_completed?: boolean | null
+          course_id?: number
+          course_score?: number | null
+          created_at?: string
+          id?: string
+          lessons_completed?: number | null
+          total_lessons?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_lesson_progress: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          course_id: number
+          created_at: string
+          id: string
+          lesson_id: number
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          course_id: number
+          created_at?: string
+          id?: string
+          lesson_id: number
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          course_id?: number
+          created_at?: string
+          id?: string
+          lesson_id?: number
+          score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_course_progress: {
+        Args: { user_uuid: string; course_id_param: number }
+        Returns: {
+          lessons_completed: number
+          total_lessons: number
+          progress_percentage: number
+          course_score: number
+          course_completed: boolean
+        }[]
+      }
+      get_user_total_score: {
+        Args: { user_uuid: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

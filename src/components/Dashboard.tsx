@@ -3,6 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, BookOpen, Target, Clock, TrendingUp, Award } from 'lucide-react';
+import { useUserProgress } from '@/hooks/useUserProgress';
+import { useEffect } from 'react';
+import type { User } from '@supabase/supabase-js';
 
 interface Achievement {
   name: string;
@@ -13,13 +16,39 @@ interface Achievement {
 
 interface DashboardProps {
   achievements: Achievement[];
+  user?: User | null;
 }
 
-const Dashboard = ({ achievements }: DashboardProps) => {
+const Dashboard = ({ achievements, user }: DashboardProps) => {
+  const { totalScore, courseProgresses, fetchCourseProgress } = useUserProgress(user);
+
+  // Sample courses to display progress for
+  const sampleCourses = [
+    { id: 1, title: "Constitutional Foundations", totalLessons: 12 },
+    { id: 2, title: "Voting Rights & Democracy", totalLessons: 8 },
+    { id: 3, title: "Civil Rights Movement", totalLessons: 15 },
+    { id: 4, title: "Local Government", totalLessons: 6 }
+  ];
+
+  useEffect(() => {
+    if (user) {
+      sampleCourses.forEach(course => {
+        fetchCourseProgress(course.id);
+      });
+    }
+  }, [user]);
+
+  // Calculate total completed courses
+  const completedCourses = Object.values(courseProgresses).filter(progress => progress.courseCompleted).length;
+  
+  // Calculate average progress across all courses
+  const totalProgressSum = Object.values(courseProgresses).reduce((sum, progress) => sum + progress.progressPercentage, 0);
+  const averageProgress = Object.keys(courseProgresses).length > 0 ? Math.round(totalProgressSum / Object.keys(courseProgresses).length) : 0;
+
   const stats = [
-    { label: "Courses Completed", value: "3", icon: BookOpen, color: "text-orange-700" },
-    { label: "Total Points", value: "1,250", icon: Trophy, color: "text-orange-700" },
-    { label: "Learning Streak", value: "12 days", icon: Target, color: "text-sky-700" },
+    { label: "Courses Completed", value: completedCourses.toString(), icon: BookOpen, color: "text-orange-700" },
+    { label: "Total Points", value: totalScore.toLocaleString(), icon: Trophy, color: "text-orange-700" },
+    { label: "Average Progress", value: `${averageProgress}%`, icon: Target, color: "text-sky-700" },
     { label: "Study Time", value: "24h", icon: Clock, color: "text-sky-700" }
   ];
 
@@ -31,10 +60,10 @@ const Dashboard = ({ achievements }: DashboardProps) => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-wheat">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome back, Thande!</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome back!</h1>
           <p className="text-xl text-gray-700">Ready to continue your civic education journey?</p>
         </div>
 
@@ -67,37 +96,20 @@ const Dashboard = ({ achievements }: DashboardProps) => {
               <CardDescription className="text-gray-600">Track your progress across all courses</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-900">Constitutional Foundations</span>
-                  <span className="text-orange-700 font-semibold">85%</span>
-                </div>
-                <Progress value={85} className="h-3" />
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-900">Voting Rights & Democracy</span>
-                  <span className="text-orange-700 font-semibold">62%</span>
-                </div>
-                <Progress value={62} className="h-3" />
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-900">Civil Rights Movement</span>
-                  <span className="text-orange-700 font-semibold">40%</span>
-                </div>
-                <Progress value={40} className="h-3" />
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-900">Local Government</span>
-                  <span className="text-orange-700 font-semibold">95%</span>
-                </div>
-                <Progress value={95} className="h-3" />
-              </div>
+              {sampleCourses.map((course) => {
+                const progress = courseProgresses[course.id];
+                const progressPercentage = progress?.progressPercentage || 0;
+                
+                return (
+                  <div key={course.id} className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-medium text-gray-900">{course.title}</span>
+                      <span className="text-orange-700 font-semibold">{progressPercentage}%</span>
+                    </div>
+                    <Progress value={progressPercentage} className="h-3" />
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
 

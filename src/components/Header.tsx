@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Trophy, BarChart3, Award, LogOut, LogIn } from 'lucide-react';
+import { useUserProgress } from '@/hooks/useUserProgress';
 import type { User } from '@supabase/supabase-js';
 
 interface HeaderProps {
@@ -12,6 +13,8 @@ interface HeaderProps {
 }
 
 const Header = ({ activeTab, setActiveTab, user, onAuthAction }: HeaderProps) => {
+  const { totalScore } = useUserProgress(user);
+  
   const navItems = [
     { id: 'home', label: 'Home', icon: BookOpen },
     { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
@@ -58,7 +61,7 @@ const Header = ({ activeTab, setActiveTab, user, onAuthAction }: HeaderProps) =>
             {user && (
               <Badge variant="outline" className="hidden sm:flex items-center space-x-1 border-orange-200 text-orange-700">
                 <Trophy className="h-3 w-3" />
-                <span>1,250 pts</span>
+                <span>{totalScore.toLocaleString()} pts</span>
               </Badge>
             )}
             

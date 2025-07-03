@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Play, ChevronRight, Users, BookOpen, Trophy } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
+import { useUserProgress } from '@/hooks/useUserProgress';
+import { useEffect } from 'react';
 
 interface HeroProps {
   setActiveTab: (tab: string) => void;
@@ -9,6 +11,24 @@ interface HeroProps {
 }
 
 const Hero = ({ setActiveTab, user }: HeroProps) => {
+  const { totalScore, courseProgresses, fetchCourseProgress } = useUserProgress(user);
+
+  // Sample course data to fetch progress for
+  const sampleCourses = [
+    { id: 1, title: "Constitutional Law", totalLessons: 12 },
+    { id: 2, title: "Voting Rights", totalLessons: 8 },
+    { id: 3, title: "Local Government", totalLessons: 6 }
+  ];
+
+  useEffect(() => {
+    if (user) {
+      // Fetch progress for sample courses to display in hero
+      sampleCourses.forEach(course => {
+        fetchCourseProgress(course.id);
+      });
+    }
+  }, [user]);
+
   return (
     <section className="relative py-20 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -67,42 +87,75 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
                   <div className="text-2xl">📊</div>
                 </div>
                 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Constitutional Law</span>
-                    <span className="text-orange-700 font-semibold">85%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
-                    <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                </div>
+                {user ? (
+                  <>
+                    {sampleCourses.map((course) => {
+                      const progress = courseProgresses[course.id];
+                      const progressPercentage = progress?.progressPercentage || 0;
+                      
+                      return (
+                        <div key={course.id} className="space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">{course.title}</span>
+                            <span className="text-orange-700 font-semibold">{progressPercentage}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-3">
+                            <div 
+                              className="bg-gradient-primary h-3 rounded-full transition-all duration-500" 
+                              style={{ width: `${progressPercentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Voting Rights</span>
-                    <span className="text-orange-700 font-semibold">62%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
-                    <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '62%' }}></div>
-                  </div>
-                </div>
+                    <div className="pt-4 border-t border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <span className="text-white font-semibold">Total Points</span>
+                        <span className="text-2xl font-bold text-orange-700">{totalScore.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Constitutional Law</span>
+                        <span className="text-orange-700 font-semibold">0%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
+                      </div>
+                    </div>
 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-300">Local Government</span>
-                    <span className="text-orange-700 font-semibold">40%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
-                    <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
-                </div>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Voting Rights</span>
+                        <span className="text-orange-700 font-semibold">0%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
+                      </div>
+                    </div>
 
-                <div className="pt-4 border-t border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <span className="text-white font-semibold">Total Points</span>
-                    <span className="text-2xl font-bold text-orange-700">1,250</span>
-                  </div>
-                </div>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Local Government</span>
+                        <span className="text-orange-700 font-semibold">0%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <span className="text-white font-semibold">Total Points</span>
+                        <span className="text-2xl font-bold text-orange-700">0</span>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             

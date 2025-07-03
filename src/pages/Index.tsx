@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -181,7 +180,7 @@ const Index = () => {
 
       {activeTab === 'dashboard' && (
         <>
-          <Dashboard achievements={achievements} />
+          <Dashboard achievements={achievements} user={user} />
           <Footer />
         </>
       )}
@@ -203,6 +202,7 @@ const Index = () => {
                   course={course} 
                   userSubscriptionTier={userSubscriptionTier}
                   onAccessRestricted={handleAccessRestricted}
+                  user={user}
                 />
               ))}
             </div>
