@@ -88,17 +88,43 @@ const PricingSection = () => {
         return;
       }
 
-      // Here you would integrate with Stripe
-      // For now, we'll show a placeholder
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Update user subscription in database
+      const subscriptionTier = planId === 'premium' ? 'Premium' : 'Enterprise';
+      const subscriptionEnd = new Date();
+      subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1); // Add 1 month
+
+      const { error } = await supabase
+        .from('subscribers')
+        .upsert({
+          email: session.user.email!,
+          user_id: session.user.id,
+          subscribed: true,
+          subscription_tier: subscriptionTier,
+          subscription_end: subscriptionEnd.toISOString(),
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'email' });
+
+      if (error) {
+        throw error;
+      }
+
       toast({
-        title: "Coming Soon!",
-        description: "Stripe integration will be available soon. Stay tuned!",
+        title: "Subscription Activated!",
+        description: `Welcome to ${subscriptionTier}! Your subscription is now active.`,
       });
+
+      // Refresh the page to update the UI
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
       
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -114,6 +140,11 @@ const PricingSection = () => {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Unlock your civic potential with our comprehensive learning platform
           </p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
+            <p className="text-sm text-blue-800">
+              🎉 <strong>Demo Mode:</strong> Payment processing is simulated for demonstration purposes
+            </p>
+          </div>
         </div>
         
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -161,7 +192,7 @@ const PricingSection = () => {
                       : 'bg-sky-800 hover:bg-sky-700'
                   }`}
                 >
-                  {loading === plan.id ? 'Processing...' : (plan.id === 'freemium' ? 'Get Started Free' : 'Get Started')}
+                  {loading === plan.id ? 'Processing...' : (plan.id === 'freemium' ? 'Get Started Free' : 'Subscribe Now')}
                 </Button>
               </CardContent>
             </Card>
