@@ -78,7 +78,7 @@ const Dashboard = ({ achievements, user }: DashboardProps) => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                  <div className="text-sm text-orange-500">{stat.label}</div>
                 </CardContent>
               </Card>
             );
