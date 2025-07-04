@@ -16,7 +16,7 @@ const Footer = () => {
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">CivicAI</h3>
+                <h3 className="text-xl text-orange-700 font-bold text-white">CivicAI</h3>
                 <p className="text-sm text-sky-300">Learn. Engage. Lead.</p>
               </div>
             </div>
