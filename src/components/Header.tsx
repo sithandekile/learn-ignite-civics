@@ -31,7 +31,7 @@ const Header = ({ activeTab, setActiveTab, user, onAuthAction }: HeaderProps) =>
               <BookOpen className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">CivicAI</h1>
+              <h1 className="text-xl font-bold text-orange-950">CivicAI</h1>
               <p className="text-sm text-gray-600">Learn. Engage. Lead.</p>
             </div>
           </div>
