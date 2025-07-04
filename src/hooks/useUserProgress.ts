@@ -79,7 +79,25 @@ export const useUserProgress = (user: User | null) => {
     if (!user) return;
 
     setIsLoading(true);
+    console.log(`Updating lesson progress for course ${courseId}, lesson ${lessonId} with score ${score}`);
+    
     try {
+      // First, check if this lesson was already completed
+      const { data: existingProgress } = await supabase
+        .from('user_lesson_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('course_id', courseId)
+        .eq('lesson_id', lessonId)
+        .single();
+
+      // If lesson already completed, don't update again
+      if (existingProgress?.completed) {
+        console.log('Lesson already completed, skipping update');
+        setIsLoading(false);
+        return;
+      }
+
       // Update lesson progress
       const { error: lessonError } = await supabase
         .from('user_lesson_progress')
@@ -94,15 +112,28 @@ export const useUserProgress = (user: User | null) => {
 
       if (lessonError) {
         console.error('Error updating lesson progress:', lessonError);
+        setIsLoading(false);
         return;
       }
 
-      // Get current course progress to calculate new totals
-      const currentProgress = await fetchCourseProgress(courseId);
+      console.log('Lesson progress updated successfully');
+
+      // Get current course progress or initialize if it doesn't exist
+      let currentProgress = courseProgresses[courseId];
+      if (!currentProgress) {
+        // Initialize course progress if it doesn't exist
+        await initializeCourseProgress(courseId, 12); // Default to 12 lessons for Constitutional Foundations
+        currentProgress = await fetchCourseProgress(courseId);
+      }
+
       if (currentProgress) {
+        // Calculate new values
         const newLessonsCompleted = currentProgress.lessonsCompleted + 1;
         const newCourseScore = currentProgress.courseScore + score;
         const courseCompleted = newLessonsCompleted >= currentProgress.totalLessons;
+        const newProgressPercentage = Math.round((newLessonsCompleted / currentProgress.totalLessons) * 100);
+
+        console.log(`Updating course progress: ${newLessonsCompleted}/${currentProgress.totalLessons} lessons (${newProgressPercentage}%)`);
 
         // Update course progress
         const { error: courseError } = await supabase
@@ -119,13 +150,30 @@ export const useUserProgress = (user: User | null) => {
 
         if (courseError) {
           console.error('Error updating course progress:', courseError);
+          setIsLoading(false);
           return;
         }
+
+        console.log('Course progress updated successfully');
+
+        // Update local state immediately
+        setCourseProgresses(prev => ({
+          ...prev,
+          [courseId]: {
+            ...currentProgress,
+            lessonsCompleted: newLessonsCompleted,
+            courseScore: newCourseScore,
+            courseCompleted: courseCompleted,
+            progressPercentage: newProgressPercentage
+          }
+        }));
       }
 
-      // Refresh data
+      // Refresh data from database to ensure consistency
       await fetchCourseProgress(courseId);
       await fetchUserTotalScore();
+      
+      console.log('Progress update completed');
     } catch (error) {
       console.error('Error updating progress:', error);
     } finally {
@@ -135,6 +183,8 @@ export const useUserProgress = (user: User | null) => {
 
   const initializeCourseProgress = async (courseId: number, totalLessons: number) => {
     if (!user) return;
+
+    console.log(`Initializing course progress for course ${courseId} with ${totalLessons} lessons`);
 
     try {
       const { error } = await supabase
@@ -154,6 +204,7 @@ export const useUserProgress = (user: User | null) => {
       }
 
       await fetchCourseProgress(courseId);
+      console.log('Course progress initialized successfully');
     } catch (error) {
       console.error('Error initializing course progress:', error);
     }

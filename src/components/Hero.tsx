@@ -15,9 +15,10 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
 
   // Sample course data to fetch progress for
   const sampleCourses = [
-    { id: 1, title: "Constitutional Law", totalLessons: 12 },
-    { id: 2, title: "Voting Rights", totalLessons: 8 },
-    { id: 3, title: "Local Government", totalLessons: 6 }
+    { id: 1, title: "Constitutional Foundations", totalLessons: 12 },
+    { id: 2, title: "Voting Rights & Democracy", totalLessons: 8 },
+    { id: 3, title: "Civil Rights Movement", totalLessons: 15 },
+    { id: 4, title: "Local Government", totalLessons: 6 }
   ];
 
   useEffect(() => {
@@ -26,6 +27,19 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
       sampleCourses.forEach(course => {
         fetchCourseProgress(course.id);
       });
+    }
+  }, [user]);
+
+  // Refresh progress every 5 seconds if user is logged in
+  useEffect(() => {
+    if (user) {
+      const interval = setInterval(() => {
+        sampleCourses.forEach(course => {
+          fetchCourseProgress(course.id);
+        });
+      }, 5000);
+
+      return () => clearInterval(interval);
     }
   }, [user]);
 
@@ -106,6 +120,11 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
                               style={{ width: `${progressPercentage}%` }}
                             ></div>
                           </div>
+                          {progress && (
+                            <div className="text-xs text-gray-400">
+                              {progress.lessonsCompleted}/{progress.totalLessons} lessons completed
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -119,35 +138,17 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
                   </>
                 ) : (
                   <>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Constitutional Law</span>
-                        <span className="text-orange-700 font-semibold">0%</span>
+                    {sampleCourses.slice(0, 3).map((course) => (
+                      <div key={course.id} className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">{course.title}</span>
+                          <span className="text-orange-700 font-semibold">0%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Voting Rights</span>
-                        <span className="text-orange-700 font-semibold">0%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-300">Local Government</span>
-                        <span className="text-orange-700 font-semibold">0%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-gradient-primary h-3 rounded-full" style={{ width: '0%' }}></div>
-                      </div>
-                    </div>
+                    ))}
 
                     <div className="pt-4 border-t border-gray-700">
                       <div className="flex items-center justify-between">
