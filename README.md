@@ -72,6 +72,8 @@ To connect a domain, navigate to Project > Settings > Domains and click Connect 
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
+deploment link:https://learn-ignite-civics.vercel.app/
+
 #PROMPTS USED TO CREATE THIS WESITE
 -hie help me to build  an AI platform supporting academic learning, delivering personalized, gamified civic education using mern stack  and  tailwind for styling, the primary color has to be orange-700 and the secondary color has to be sky-950. Include these features,landing page,dashboard for learning progress and achivements,courses,Ai chat bot assistane for personalized learning support and the gamified elementa for bages,tracking progress and point
 
