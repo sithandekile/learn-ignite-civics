@@ -30,15 +30,15 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
   }, [user]);
 
   return (
-    <section className="relative py-20 overflow-hidden">
+    <section className="relative py-20 overflow-hidden bg-white/95">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-                Master <span className="text-white">Civic Education</span> with AI-Powered Learning
+                Master <span className="text-orange-700">Civic Education</span> with AI-Powered Learning
               </h1>
-              <p className="text-xl text-white leading-relaxed">
+              <p className="text-xl text-gray-600 leading-relaxed">
                 Transform How You Learn Civic Education with AI-Driven Personalization
                 Explore an adaptive, gamified curriculum that equips you with the tools 
                 to think critically, engage meaningfully, and become an active, informed citizen.
@@ -65,15 +65,15 @@ const Hero = ({ setActiveTab, user }: HeroProps) => {
             </div>
 
             <div className="flex items-center space-x-8 pt-8">
-              <div className="flex items-center space-x-2 text-white">
+              <div className="flex items-center space-x-2 text-gray-600">
                 <Users className="h-5 w-5 text-sky-950" />
                 <span>10,000+ Learners</span>
               </div>
-              <div className="flex items-center space-x-2 text-white">
+              <div className="flex items-center space-x-2 text-gray-600">
                 <BookOpen className="h-5 w-5 text-sky-950" />
                 <span>50+ Courses</span>
               </div>
-              <div className="flex items-center space-x-2 text-white">
+              <div className="flex items-center space-x-2 text-gray-600">
                 <Trophy className="h-5 w-5 text-sky-950" />
                 <span>Gamified Learning</span>
               </div>

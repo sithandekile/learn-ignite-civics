@@ -182,6 +182,9 @@ const Index = () => {
     if (activeTab === 'courses') {
       return "min-h-screen bg-white/95";
     }
+    if (activeTab === 'achievements') {
+      return "min-h-screen bg-white/95";
+    }
     return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
   };
 
@@ -237,8 +240,8 @@ const Index = () => {
         <>
           <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold text-white mb-4">Your Achievements</h1>
-              <p className="text-xl text-orange-100">Track your progress and celebrate your learning milestones</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Your Achievements</h1>
+              <p className="text-xl text-gray-700">Track your progress and celebrate your learning milestones</p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
