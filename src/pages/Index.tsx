@@ -82,21 +82,33 @@ const Index = () => {
       setActiveTab(location.state.activeTab);
     }
 
-    // Check current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check current session and fetch subscription tier
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        // In a real app, you'd fetch subscription status from your backend
-        // For now, we'll simulate a freemium user
-        setUserSubscriptionTier('Freemium');
+        // Fetch user's subscription tier from database
+        const { data: subscriber } = await supabase
+          .from('subscribers')
+          .select('subscription_tier')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        setUserSubscriptionTier(subscriber?.subscription_tier || 'Freemium');
       }
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        setUserSubscriptionTier('Freemium');
+        // Fetch subscription tier for new session
+        const { data: subscriber } = await supabase
+          .from('subscribers')
+          .select('subscription_tier')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        setUserSubscriptionTier(subscriber?.subscription_tier || 'Freemium');
       } else {
         setUserSubscriptionTier(null);
       }
@@ -152,13 +164,23 @@ const Index = () => {
     }, 100);
   };
 
+  const handleSubscriptionSuccess = (tier: string) => {
+    setUserSubscriptionTier(tier);
+    // Show the AI chat bot after successful subscription
+    setShowChat(true);
+    toast({
+      title: "Welcome to Premium!",
+      description: "Your AI tutor is now available. You also have access to all courses!",
+    });
+  };
+
   // Get background class based on active tab
   const getBackgroundClass = () => {
     if (activeTab === 'dashboard') {
-      return "min-h-screen bg-wheat";
+      return "min-h-screen bg-white/95";
     }
     if (activeTab === 'courses') {
-      return "min-h-screen bg-wheat";
+      return "min-h-screen bg-white/95";
     }
     return "min-h-screen bg-gradient-to-br from-orange-700 to-orange-800";
   };
@@ -172,7 +194,7 @@ const Index = () => {
           <Hero setActiveTab={setActiveTab} user={user} />
           <Features />
           <div id="pricing">
-            <PricingSection />
+            <PricingSection onSubscriptionSuccess={handleSubscriptionSuccess} />
           </div>
           <Footer />
         </>
