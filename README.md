@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to The Civic Education
 
 ## Project info
 
@@ -71,3 +71,21 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+#PROMPTS USED TO CREATE THIS WESITE
+-hie help me to build  an AI platform supporting academic learning, delivering personalized, gamified civic education using mern stack  and  tailwind for styling, the primary color has to be orange-700 and the secondary color has to be sky-950. Include these features,landing page,dashboard for learning progress and achivements,courses,Ai chat bot assistane for personalized learning support and the gamified elementa for bages,tracking progress and point
+
+-lets add the users login and register authentication ,and add the monitization section with the payment method of strip and connect it to the superbase
+finally can we have all the cards to bg- sky-950 
+
+-that was great ,now lets add the footer with links for our app and the footer should have a bg-sky-950  and a back to home button on signin and signup pages
+
+-on courses page the progress bar has to start from zero and increase  gradually after the learner start learning and the continue learning button have to send the learner to the lessons and the beginner courses are one to appear without payment and they have to be connected to the basic pricing plan and change basic to Freemium, learners should only access the intermediate and advanced  courses from the premium plan and  enterprise  after paying using  strip method and the ai bot has to be included only in premium and enterprise pricing plan
+
+-lets add lessons so that if the learner clicks start course will be sent to the lessons
+
+-find the learner by their id and  score them for each and every course they take and display their final total score at the end this has to reflect on their home page, hero section on the learning progress card 
+
+-the strip method is not active at the moment if there is another way of making payment which is available lets use it instead and the payment method system to display the  payment has to be form that will redirect the learner to the ai bot and to the intermediate and the advanced course
+
+-but now i cant navigate to the lessons page after clicking start corse button can you please fix that
