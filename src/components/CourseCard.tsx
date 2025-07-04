@@ -65,18 +65,32 @@ const CourseCard = ({ course, userSubscriptionTier, onAccessRestricted, user }: 
   const actualScore = courseProgress?.courseScore || 0;
 
   const handleContinueClick = async () => {
+    console.log('Start Course button clicked for course:', course.id);
+    
     if (!isAccessible) {
+      console.log('Access restricted for course:', course.id);
       onAccessRestricted?.();
       return;
     }
 
-    // Initialize course progress if it doesn't exist
-    if (user && !courseProgress) {
-      await initializeCourseProgress(course.id, course.lessons);
+    if (!user) {
+      console.log('User not authenticated');
+      return;
     }
 
-    // Navigate to lessons page
-    navigate(`/lessons/${course.id}`);
+    try {
+      // Initialize course progress if it doesn't exist
+      if (!courseProgress) {
+        console.log('Initializing course progress for course:', course.id);
+        await initializeCourseProgress(course.id, course.lessons);
+      }
+
+      // Navigate to lessons page
+      console.log('Navigating to lessons page for course:', course.id);
+      navigate(`/lessons/${course.id}`);
+    } catch (error) {
+      console.error('Error handling course start:', error);
+    }
   };
 
   return (
